@@ -1,1 +1,1 @@
-# str_class - test repository for classes
+# str_class - test repository for classes123
