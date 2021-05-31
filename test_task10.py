@@ -23,9 +23,9 @@ def check_red(color):
 
 
 def check_1st_size_bigger_than_2nd(first_size, second_size):
-    first_area = first_size['height'] * first_size['width']
-    second_area = second_size['height'] * second_size['width']
-    if first_area <= second_area:
+    first_size_numeric = float(first_size.split("px")[0])
+    second_size_numeric = float(second_size.split("px")[0])
+    if first_size_numeric <= second_size_numeric:
         raise AssertionError("1st size is not bigger.")
 
 
@@ -51,13 +51,15 @@ def test_correct_values_of_products(driver):
     main_page_regular_price = first_campaigns_product.find_element_by_xpath(".//s[@class='regular-price']")
     main_page_regular_price_color = main_page_regular_price.value_of_css_property("color")
     check_grey(main_page_regular_price_color)  # point в
+    main_page_regular_price_font_size = main_page_regular_price.value_of_css_property("font-size")
     main_page_regular_price_value = main_page_regular_price.get_attribute("textContent")
     # next locator checks bold because of .//strong (point г)
     main_page_campaign_price = first_campaigns_product.find_element_by_xpath(".//strong[@class='campaign-price']")
     main_page_campaign_price_color = main_page_campaign_price.value_of_css_property("color")
     check_red(main_page_campaign_price_color)  # point г
+    main_page_campaign_price_font_size = main_page_campaign_price.value_of_css_property("font-size")
     main_page_campaign_price_value = main_page_campaign_price.get_attribute("textContent")
-    check_1st_size_bigger_than_2nd(main_page_campaign_price.size, main_page_regular_price.size)  # point д
+    check_1st_size_bigger_than_2nd(main_page_campaign_price_font_size, main_page_regular_price_font_size)  # point д
 
     driver.get(first_campaigns_product.get_attribute("href"))
     good_page_product_title = driver.find_element_by_xpath("//*[@itemprop='name']").get_attribute("textContent")
@@ -67,6 +69,7 @@ def test_correct_values_of_products(driver):
     good_page_regular_price = driver.find_element_by_xpath("//s[@class='regular-price']")
     good_page_regular_price_color = good_page_regular_price.value_of_css_property("color")
     check_grey(good_page_regular_price_color)  # point в
+    good_page_regular_price_font_size = good_page_regular_price.value_of_css_property("font-size")
     good_page_regular_price_value = good_page_regular_price.get_attribute("textContent")
     if main_page_regular_price_value != good_page_regular_price_value:  # point б
         raise AssertionError("Regular prices don't match.")
@@ -74,7 +77,8 @@ def test_correct_values_of_products(driver):
     good_page_campaign_price = driver.find_element_by_xpath("//strong[@class='campaign-price']")
     good_page_campaign_price_color = good_page_campaign_price.value_of_css_property("color")
     check_red(good_page_campaign_price_color)  # point г
+    good_page_campaign_price_font_size = good_page_campaign_price.value_of_css_property("font-size")
     good_page_campaign_price_value = good_page_campaign_price.get_attribute("textContent")
     if main_page_campaign_price_value != good_page_campaign_price_value:  # point б
         raise AssertionError("Campaign prices don't match.")
-    check_1st_size_bigger_than_2nd(good_page_campaign_price.size, good_page_regular_price.size)  # point д
+    check_1st_size_bigger_than_2nd(good_page_campaign_price_font_size, good_page_regular_price_font_size)  # point д
