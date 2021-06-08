@@ -42,17 +42,17 @@ def test_work_with_cart(driver):
     add_1st_product_to_cart(driver)
     add_1st_product_to_cart(driver)
     driver.find_element_by_xpath("//a[contains(@href, 'checkout') and @class='link']").click()
-    checkout_number_of_ducks = len(driver.find_elements_by_xpath("//li[@class='shortcut']"))
-    for n in range(0, checkout_number_of_ducks):
-        order_number_of_ducks = len(driver.find_elements_by_xpath("//td[@class='item']"))
-        if n != checkout_number_of_ducks-1:
+    initial_order_number_of_ducks = len(driver.find_elements_by_xpath("//td[@class='item']"))
+    for n in range(0, initial_order_number_of_ducks):
+        changing_order_number_of_ducks = len(driver.find_elements_by_xpath("//td[@class='item']"))
+        try:
+            driver.implicitly_wait(0)
             driver.find_element_by_xpath("//li[@class='shortcut'][1]").click()
             driver.find_element_by_xpath("//button[@name='remove_cart_item'][1]").click()
-        else:
+        except NoSuchElementException:
             driver.find_element_by_xpath("//button[@name='remove_cart_item'][1]").click()
         for i in range(0, 10):
-            driver.implicitly_wait(0)
-            if len(driver.find_elements_by_xpath("//td[@class='item']")) == order_number_of_ducks - 1:
+            if len(driver.find_elements_by_xpath("//td[@class='item']")) == changing_order_number_of_ducks - 1:
                 driver.implicitly_wait(10)
                 break
             else:
